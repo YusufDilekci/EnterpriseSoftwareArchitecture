@@ -10,7 +10,7 @@ using DataAccess.Concrete.InMemory;
 
 static void ProductTest()
 {
-    ProductManager productManager = new ProductManager(new EfProductDal());
+    ProductManager productManager = new ProductManager(new EfProductDal(), new CategoryManager(new EfCategoryDal()));
 
 
     //var productsByCategory = productManager.GetAllByCategoryId(2);

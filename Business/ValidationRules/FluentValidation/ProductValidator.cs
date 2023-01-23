@@ -19,8 +19,9 @@ namespace Business.ValidationRules.FluentValidation
             RuleFor(p => p.UnitPrice).NotEmpty();
             RuleFor(p => p.UnitPrice).GreaterThan(0);
             RuleFor(p => p.UnitPrice).GreaterThanOrEqualTo(10).When(p => p.CategoryId == 1);
+           
 
-            //Eğer burda AbstractValidatorda olmayan bir rules yazamak istersek
+            //Eğer burda AbstractValidatorda olmayan bir rules yazmak istersek
 
             RuleFor(p => p.ProductName).Must(StartWithA).WithMessage("Ürünler A harfi ile başlamalıdır.");
      
