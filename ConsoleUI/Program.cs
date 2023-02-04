@@ -36,7 +36,7 @@ static void CategoryTest()
 {
     CategoryManager categoryManager = new CategoryManager(new EfCategoryDal());
 
-    var category = categoryManager.GetById(2);
+    var category = categoryManager.GetById(2).Data;
 
     Console.WriteLine(category.CategoryName);
 }

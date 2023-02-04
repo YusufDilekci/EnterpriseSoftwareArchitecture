@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspect.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofact.Validation;
@@ -27,7 +28,8 @@ namespace Business.Concrete
             _categoryService = categoryService;
         }
 
-        [ValidationAspect(typeof(ProductValidator))]
+        [SecuredOperation("product.add,admin")]
+        [ValidationAspect(typeof(ProductValidator))] //validation
         public IResult Add(Product product)
         {
             //business codes
@@ -105,7 +107,7 @@ namespace Business.Concrete
 
         private IResult CheckIfCategoryCountExceed()
         {
-            var totalCategory = _categoryService.GetAll();
+            var totalCategory = _categoryService.GetList();
             if (totalCategory.Data.Count() > 15)
             {
                 return new ErrorResult(Messages.CategoryCountExceed);
