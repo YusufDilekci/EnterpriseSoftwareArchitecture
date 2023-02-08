@@ -2,6 +2,8 @@
 using Business.BusinessAspect.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofact.Caching;
+using Core.Aspects.Autofact.Transaction;
 using Core.Aspects.Autofact.Validation;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Business;
@@ -28,8 +30,10 @@ namespace Business.Concrete
             _categoryService = categoryService;
         }
 
-        [SecuredOperation("product.add,admin")]
+        [SecuredOperation("product.add,admin")] //methoda claim atamak: yani belirtilen claime sahip kişiler bu metodu kullanmaya yetkisi vardır.
         [ValidationAspect(typeof(ProductValidator))] //validation
+        [CacheRemoveAspect("IProductService.Get")] //Yeni bir ürün eklendiğinde cachete bulunan get keyine sahip (metot adı get ile başlayan) metotları kaldırır
+                                                   //Böylece ürün veritabanından getirilmiş olur
         public IResult Add(Product product)
         {
             //business codes
@@ -49,6 +53,7 @@ namespace Business.Concrete
 
         }
 
+        [CacheAspect] //key, value
         public IDataResult<List<Product>> GetAll()
         {
             if(DateTime.Now.Hour == 22)
@@ -63,6 +68,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Product>>(_productDal.GetAll(i => i.CategoryId == categoryId));
         }
 
+        [CacheAspect]
         public IDataResult<Product> GetById(int productId)
         {
             return new SuccessDataResult<Product>(_productDal.Get(i=> i.ProductId == productId));
@@ -116,9 +122,10 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-
-
-
-
+        [TransactionScopeAspect]
+        public IResult AddTransactionalTest(Product product)
+        {
+            throw new NotImplementedException(); //İmplemet edilecek ÖDEV
+        }
     }
 }
